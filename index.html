@@ -9,23 +9,31 @@
 
 <body>
     <script>
-        let arrNumbers = [100, 50, 20, -1, -3, 0, 5, -2];
-
-        function compareNumbers(n1, n2) {
-            if (n1 == n2) return 0;
-            if (n1 < n2)
-                return 1;
-            else
-                return -1;
+        function multiTable() {
+            let n = parseFloat(prompt('Введите число'));
+            if (isNaN(n)) {
+                alert('Это не число');
+                return multiTable();
+            }
+            let table = '<table border="1">';
+            table += '<tr><th colspan="2">' + n + '</th></tr>';
+            for (let i = 1; i <= 10; i++) {
+                table += '<tr><td>' + i + ' x ' + n + '</td><td>' + i * n + '</td></tr>';
+            }
+            table += '</table>';
+            document.body.insertAdjacentHTML('afterBegin', table);
         }
-        arrNumbers.sort(compareNumbers);
-        console.log(arrNumbers.join(", "));
 
-        /////////////////////////////////////////
+        multiTable();
 
-        let arr = [5, 2, 1, -10, 8];
-        arr.sort((a, b) => b - a);
-        console.log(arr);
+        /* 
+        Использована процедурная, структурная и императивная парадигмы
+        Процедурная: вся содержательная часть программы обернута в функцию
+        Структурная: алгоритм реализован с помощью нескольких конструкций
+        (проверка условия, цикл)
+        Императивная: реализация итоговой таблицы умножения расписана
+        пошагово  
+        */
     </script>
 </body>
 
