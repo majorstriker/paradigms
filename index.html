@@ -5,35 +5,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #field td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
+    <table id="field">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
     <script>
-        function multiTable() {
-            let n = parseFloat(prompt('Введите число'));
-            if (isNaN(n)) {
-                alert('Это не число');
-                return multiTable();
+        let cells = document.querySelectorAll('#field td');
+        start(cells);
+
+        function start(cells) {
+            let i = 0;
+
+            for (let cell of cells) {
+                cell.addEventListener('click', function step() {
+                    this.textContent = ['X', 'O'][i % 2];
+                    this.removeEventListener('click', step);
+
+                    if (isVictory(cells)) {
+                        alert(this.textContent);
+                    } else if (i == 8) {
+                        alert('ничья');
+                    }
+
+                    i++;
+                });
             }
-            let table = '<table border="1">';
-            table += '<tr><th colspan="2">' + n + '</th></tr>';
-            for (let i = 1; i <= 10; i++) {
-                table += '<tr><td>' + i + ' x ' + n + '</td><td>' + i * n + '</td></tr>';
-            }
-            table += '</table>';
-            document.body.insertAdjacentHTML('afterBegin', table);
         }
 
-        multiTable();
+        function init(selector) {
+            let cells = document.querySelectorAll('#field td');
+            let i = 0;
 
-        /* 
-        Использована процедурная, структурная и императивная парадигмы
-        Процедурная: вся содержательная часть программы обернута в функцию
-        Структурная: алгоритм реализован с помощью нескольких конструкций
-        (проверка условия, цикл)
-        Императивная: реализация итоговой таблицы умножения расписана
-        пошагово  
-        */
+            for (let cell of cells) {
+                cell.addEventListener('click', function step() {
+                    this.textContent = ['X', 'O'][i % 2];
+                    this.removeEventListener('click', step);
+
+                    i++;
+                });
+            }
+        }
+
+        function isVictory(cells) {
+            let combs = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6],
+            ];
+
+            for (let comb of combs) {
+                if (
+                    cells[comb[0]].textContent == cells[comb[1]].textContent &&
+                    cells[comb[1]].textContent == cells[comb[2]].textContent &&
+                    cells[comb[0]].textContent != ''
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     </script>
 </body>
 
