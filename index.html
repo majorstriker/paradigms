@@ -4,97 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        #field td {
-            width: 50px;
-            height: 50px;
-            border: 1px solid black;
-            text-align: center;
-            font-weight: bold;
-        }
-    </style>
+    <title>Секундомер</title>
 </head>
 
 <body>
-    <table id="field">
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+    <h1 id="timer">00:00:00</h1>
+    <button id="startBtn">Старт</button>
+    <button id="pauseBtn" disabled>Пауза</button>
+    <button id="resetBtn" disabled>Сброс</button>
+
     <script>
-        let cells = document.querySelectorAll('#field td');
-        start(cells);
+        let timer = document.getElementById('timer');
+        let startBtn = document.getElementById('startBtn');
+        let pauseBtn = document.getElementById('pauseBtn');
+        let resetBtn = document.getElementById('resetBtn');
 
-        function start(cells) {
-            let i = 0;
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let interval;
 
-            for (let cell of cells) {
-                cell.addEventListener('click', function step() {
-                    this.textContent = ['X', 'O'][i % 2];
-                    this.removeEventListener('click', step);
-
-                    if (isVictory(cells)) {
-                        alert(this.textContent);
-                    } else if (i == 8) {
-                        alert('ничья');
-                    }
-
-                    i++;
-                });
+        function updateTime() {
+            seconds++;
+            if (seconds === 60) {
+                minutes++;
+                seconds = 0;
             }
+            if (minutes === 60) {
+                hours++;
+                minutes = 0;
+            }
+            timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function init(selector) {
-            let cells = document.querySelectorAll('#field td');
-            let i = 0;
+        startBtn.addEventListener('click', () => {
+            interval = setInterval(updateTime, 1000);
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            resetBtn.disabled = false;
+        });
 
-            for (let cell of cells) {
-                cell.addEventListener('click', function step() {
-                    this.textContent = ['X', 'O'][i % 2];
-                    this.removeEventListener('click', step);
+        pauseBtn.addEventListener('click', () => {
+            clearInterval(interval);
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        });
 
-                    i++;
-                });
-            }
-        }
-
-        function isVictory(cells) {
-            let combs = [
-                [0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8],
-                [0, 3, 6],
-                [1, 4, 7],
-                [2, 5, 8],
-                [0, 4, 8],
-                [2, 4, 6],
-            ];
-
-            for (let comb of combs) {
-                if (
-                    cells[comb[0]].textContent == cells[comb[1]].textContent &&
-                    cells[comb[1]].textContent == cells[comb[2]].textContent &&
-                    cells[comb[0]].textContent != ''
-                ) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        resetBtn.addEventListener('click', () => {
+            clearInterval(interval);
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            timer.textContent = '00:00:00';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = true;
+        });
     </script>
 </body>
 
